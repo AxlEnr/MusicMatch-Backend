@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  idUsers      String    @id @default(uuid()) @db.Char(36)
+  firstName    String    @db.VarChar(30)
+  lastName     String    @db.VarChar(30)
+  email        String    @unique @db.VarChar(50)
+  profileImg   String?   @db.VarChar(255)
+  userPass     String    @db.VarChar(255)
+  userDesc     String?   @db.VarChar(255)
+  socialLinks  UserSocialLink[]
+  preferences  UserMusicPreference[]
+  matches1     Match[]   @relation("user1Matches")
+  matches2     Match[]   @relation("user2Matches")
+}
+
+model UserSocialLink {
+  idLink       String  @id @default(uuid()) @db.Char(36)
+  platformName String  @db.VarChar(50)
+  profileLink  String  @db.VarChar(255)
+  userID       String
+  user         User    @relation(fields: [userID], references: [idUsers], onDelete: Cascade)
+}
+
+model Music {
+  idMusic    String                @id @default(uuid()) @db.Char(36)
+  songName   String                @db.VarChar(100)
+  preferences UserMusicPreference[]
+  matchDetails MatchDetail[]
+  artistMusic ArtistMusic[]
+}
+
+model Artist {
+  idArtist    String                @id @default(uuid()) @db.Char(36)
+  artistName  String                @db.VarChar(100)
+  preferences UserMusicPreference[]
+  matchDetails MatchDetail[]
+  artistMusic ArtistMusic[]
+}
+
+model ArtistMusic {
+  id        String  @id @default(uuid()) @db.Char(36)
+  artistID  String
+  musicID   String
+  artist    Artist  @relation(fields: [artistID], references: [idArtist], onDelete: Cascade)
+  music     Music   @relation(fields: [musicID], references: [idMusic], onDelete: Cascade)
+  @@unique([artistID, musicID])
+}
+
+model UserMusicPreference {
+  idPreference String  @id @default(uuid()) @db.Char(36)
+  userID       String
+  musicID      String
+  artistID     String
+  user         User    @relation(fields: [userID], references: [idUsers], onDelete: Cascade)
+  music        Music   @relation(fields: [musicID], references: [idMusic], onDelete: Cascade)
+  artist       Artist  @relation(fields: [artistID], references: [idArtist], onDelete: Cascade)
+  @@unique([userID, musicID, artistID])
+}
+
+model Match {
+  idMatch   String         @id @default(uuid()) @db.Char(36)
+  user1ID   String
+  user2ID   String
+  matchDate DateTime       @default(now())
+  user1     User           @relation("user1Matches", fields: [user1ID], references: [idUsers], onDelete: Cascade)
+  user2     User           @relation("user2Matches", fields: [user2ID], references: [idUsers], onDelete: Cascade)
+  details   MatchDetail[]
+}
+
+model MatchDetail {
+  idDetail  String  @id @default(uuid()) @db.Char(36)
+  idMatch   String
+  idMusic   String?
+  idArtist  String?
+  match     Match   @relation(fields: [idMatch], references: [idMatch], onDelete: Cascade)
+  music     Music?  @relation(fields: [idMusic], references: [idMusic], onDelete: Cascade)
+  artist    Artist? @relation(fields: [idArtist], references: [idArtist], onDelete: Cascade)
+  @@unique([idMatch, idMusic, idArtist])
+}
