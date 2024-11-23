@@ -27,6 +27,13 @@ REDIRECT_URI=FRONTEND_URL/callback
 
 Esto iniciara la ejecucion del servidor en la vairable asignada a API_SERVICE
 
+## Migracion de la BD
+```
+npx prisma generate
+npx prisma migrate deploy
+npx prisma migrate dev --name spotifriends
+```
+
 ## Comandos disponibles
 Para ejecutar el proyecto, puedes usar los siguientes comandos:
 ```bash
