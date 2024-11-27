@@ -15,8 +15,7 @@ datasource db {
 
 model User {
   idUsers      String    @id @default(uuid()) @db.Char(36)
-  firstName    String    @db.VarChar(30)
-  lastName     String    @db.VarChar(30)
+  username    String    @db.VarChar(30)
   email        String    @unique @db.VarChar(50)
   profileImg   String?   @db.VarChar(255)
   userPass     String    @db.VarChar(255)
