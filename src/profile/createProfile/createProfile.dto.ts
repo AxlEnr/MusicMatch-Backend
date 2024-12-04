@@ -12,26 +12,13 @@ export class createProfileDto {
 
   @IsNotEmpty()
   @IsString()
-  profileIMG: string;
+  profileImg: string;
 
   @IsNotEmpty()
   @IsString()
-  password: string;
+  userPass: string;
 
   @IsNotEmpty()
   @IsString()
-  descripcion: string;
-
-  // Campos opcionales
-  @IsString()
-  @IsOptional()
-  twitter?: string;
-
-  @IsString()
-  @IsOptional()
-  facebook?: string;
-
-  @IsString()
-  @IsOptional()
-  instagram?: string;
+  userDesc: string;
 }

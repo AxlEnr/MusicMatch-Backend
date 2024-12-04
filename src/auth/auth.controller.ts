@@ -3,6 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import axios from 'axios';
 import * as crypto from 'crypto'; // Para generar el estado
+import { AccessTokenDto } from './dto/auth.dto';
+
 
 @Controller('auth/spotify')
 export class AuthController {
@@ -15,7 +17,7 @@ export class AuthController {
     const REDIRECT_URI = this.configService.get<string>('REDIRECT_URI');
     const scope = 'user-library-read user-read-private user-top-read';
   
-    const state = crypto.randomBytes(16).toString('hex'); // Generar estado único
+    const state = crypto.randomBytes(16).toString('hex'); 
     res.cookie('spotify_auth_state', state, { httpOnly: true });
   
     const authUrl = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(
@@ -57,20 +59,29 @@ export class AuthController {
   }
 
   @Post('profile')
-  async getSpotifyProfile(@Body('accessToken') accessToken: string) {
+  async getSpotifyProfile(@Body() accessTokenDto: AccessTokenDto) {
+    const { accessToken } = accessTokenDto;
+    const scope = 'user-library-read user-read-private user-top-read';
     try {
       const response = await axios.get('https://api.spotify.com/v1/me', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-
+  
       return response.data;
     } catch (error) {
+      console.error('Error al obtener el perfil de Spotify:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+  
       throw new HttpException(
         'Error obteniendo el perfil de Spotify',
         HttpStatus.BAD_REQUEST,
       );
     }
   }
+  
 }
