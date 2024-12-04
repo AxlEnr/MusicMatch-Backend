@@ -1,11 +1,23 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { createProfileDto } from './createProfile/createProfile.dto';
 
 @Injectable()
-//Servicio para crear el perfil
 export class ProfileService {
-  createProfile(data: createProfileDto) {
-    console.log('Perfil creado:', data);
-    return { message: 'Datos guardados con éxito', data };
+  constructor(private readonly prisma: PrismaService) {}
+
+  async createProfile(createProfileDto: createProfileDto) {
+    const user = await this.prisma.user.create({
+      data: {
+        ...createProfileDto,
+      },
+    });
+    return user;
+  }
+
+  // Método para obtener perfiles
+  async getProfiles() {
+    return this.prisma.user.findMany();
   }
 }
+
