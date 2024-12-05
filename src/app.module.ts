@@ -7,10 +7,11 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ProfileModule } from './profile/saveProfile.module'
 import { APP_PIPE } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { SocialLinksModule } from './socialLinks/socialLinks.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),
-    AuthModule, PrismaModule, ProfileModule],
+    AuthModule, PrismaModule, ProfileModule, SocialLinksModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: APP_PIPE,
