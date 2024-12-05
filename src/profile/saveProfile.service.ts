@@ -15,9 +15,17 @@ export class ProfileService {
     return user;
   }
 
-  // Método para obtener perfiles
-  async getProfiles() {
-    return this.prisma.user.findMany();
+
+  async getProfileByEmail(email: string) {
+    console.log('Buscando usuario con email:', email);
+    const user = await this.prisma.user.findUnique({
+      where: { email }, 
+    });
+    //console.log('Resultado de búsqueda en Prisma:', user); 
+    return user;
   }
+  
+  
+  
 }
 
