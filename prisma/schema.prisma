@@ -1,29 +1,16 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-}
-
 model User {
-  idUsers      String    @id @default(uuid()) @db.Char(36)
-  username    String    @db.VarChar(30)
-  email        String    @unique @db.VarChar(50)
-  profileImg   String?   @db.VarChar(255)
-  userPass     String    @db.VarChar(255)
-  userDesc     String?   @db.VarChar(255)
+  idUsers      String         @id @default(uuid()) @db.Char(36)
+  username     String         @db.VarChar(30)
+  email        String         @unique @db.VarChar(50)
+  profileImg   String?        @db.VarChar(255)
+  userPass     String         @db.VarChar(255)
+  userDesc     String?        @db.VarChar(255)
   socialLinks  UserSocialLink[]
   preferences  UserMusicPreference[]
-  matches1     Match[]   @relation("user1Matches")
-  matches2     Match[]   @relation("user2Matches")
+  matches1     Match[]        @relation("user1Matches")
+  matches2     Match[]        @relation("user2Matches")
+  recentAlbums UserAlbum[]    // Relación con álbumes recientes
+  playlists    UserPlaylist[] // Relación con playlists
 }
 
 model UserSocialLink {
@@ -59,11 +46,48 @@ model ArtistMusic {
   @@unique([artistID, musicID])
 }
 
+model Album {
+  idAlbum    String  @id @default(uuid()) @db.Char(36)
+  albumName  String  @db.VarChar(100)
+  artistID   String?
+  releaseDate DateTime?
+  coverUrl   String? @db.VarChar(255)
+  artist     Artist? @relation(fields: [artistID], references: [idArtist], onDelete: Cascade)
+  userAlbums UserAlbum[]
+}
+
+model UserAlbum {
+  id         String  @id @default(uuid()) @db.Char(36)
+  userID     String
+  albumID    String
+  user       User    @relation(fields: [userID], references: [idUsers], onDelete: Cascade)
+  album      Album   @relation(fields: [albumID], references: [idAlbum], onDelete: Cascade)
+  @@unique([userID, albumID])
+}
+
+model Playlist {
+  idPlaylist String  @id @default(uuid()) @db.Char(36)
+  name       String  @db.VarChar(100)
+  coverUrl   String? @db.VarChar(255)
+  ownerID    String?
+  userPlaylists UserPlaylist[]
+}
+
+model UserPlaylist {
+  id         String  @id @default(uuid()) @db.Char(36)
+  userID     String
+  playlistID String
+  user       User      @relation(fields: [userID], references: [idUsers], onDelete: Cascade)
+  playlist   Playlist  @relation(fields: [playlistID], references: [idPlaylist], onDelete: Cascade)
+  @@unique([userID, playlistID])
+}
+
 model UserMusicPreference {
   idPreference String  @id @default(uuid()) @db.Char(36)
   userID       String
   musicID      String
   artistID     String
+  preferenceType String @default("track") // Puede ser 'track', 'artist', etc.
   user         User    @relation(fields: [userID], references: [idUsers], onDelete: Cascade)
   music        Music   @relation(fields: [musicID], references: [idMusic], onDelete: Cascade)
   artist       Artist  @relation(fields: [artistID], references: [idArtist], onDelete: Cascade)
