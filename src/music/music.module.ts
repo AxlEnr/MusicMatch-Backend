@@ -8,4 +8,4 @@ import { PrismaModule } from 'src/prisma/prisma.module';
   controllers: [MusicController],
   providers: [MusicService],
 })
-export class ArtistModule {}
+export class MusicModule {}

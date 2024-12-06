@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AlbumDto } from './dtos/album.dto';
+import { PlaylistDto } from './dtos/playlist.dto';
 
 @Injectable()
-export class AlbumService {
+export class PlaylistService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createAlbum(albumDto: AlbumDto) {
+  async createPlaylist(playistDto: PlaylistDto) {
     try {
-      const createAlbum = await this.prisma.album.create({
+      const createPlaylist = await this.prisma.playlist.create({
         data: {
-          ...albumDto,
+          ...playistDto,
         },
       });
-      return createAlbum;
+      return createPlaylist;
     } catch (error) {
       throw new Error(`Error al crear el artista: ${error.message}`);
     }
