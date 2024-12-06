@@ -6,17 +6,28 @@ import { ArtistDto } from './dtos/artists.dto';
 export class ArtistService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createsocialLinks(ArtistDto: ArtistDto) {
-    const createArtist = await this.prisma.artist.create({
-      data: {
-        ...ArtistDto,
-      },
-    });
-    return createArtist;
+  async createArtist(artistDto: ArtistDto) {
+    try {
+      const createArtist = await this.prisma.artist.create({
+        data: {
+          ...artistDto,
+        },
+      });
+      return createArtist;
+    } catch (error) {
+      throw new Error(`Error al crear el artista: ${error.message}`);
+    }
   }
+  
+  
 
-  async getArtist() {
-    return this.prisma.artist.findMany();
+  async getArtistByName(artistName: string) {
+    console.log('Buscando artista con su nombre:', artistName);
+    const user = await this.prisma.artist.findFirst({
+      where: { artistName }, 
+    });
+    return user;
   }
+  
 }
 
