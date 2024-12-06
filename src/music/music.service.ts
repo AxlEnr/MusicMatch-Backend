@@ -6,6 +6,7 @@ import { MusicDto } from './dtos/music.dto';
 export class MusicService {
   constructor(private readonly prisma: PrismaService) {}
 
+  // Crear música
   async createMusic(MusicDto: MusicDto) {
     const createMusic = await this.prisma.music.create({
       data: {
@@ -15,8 +16,12 @@ export class MusicService {
     return createMusic;
   }
 
-  async getMusic() {
-    return this.prisma.music.findMany();
+  // Obtener música por nombre
+  async getMusicByName(songName: string) {
+    console.log('Buscando cancion con su nombre:', songName);
+    const user = await this.prisma.music.findFirst({
+      where: { songName }, 
+    });
+    return user;
   }
 }
-

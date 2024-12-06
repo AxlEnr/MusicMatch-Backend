@@ -12,6 +12,8 @@ import { ArtistModule } from './artists/artists.module';
 import { MusicModule } from './music/music.module';
 import { PlaylistModule } from './playlist/playlist.module';
 import { AlbumModule } from './albums/album.module';
+import { MatchModule } from './matchUsers/match.module';
+import { PreferencesModule } from './preferences/preferences.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),
@@ -22,7 +24,9 @@ import { AlbumModule } from './albums/album.module';
     ArtistModule, 
     MusicModule,
     PlaylistModule,
-    AlbumModule],
+    AlbumModule,
+    MatchModule,
+    PreferencesModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: APP_PIPE,
