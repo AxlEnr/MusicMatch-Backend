@@ -11,12 +11,6 @@ export class PrismaController {
     const users = await this.prisma.user.findMany({
       include: {
         socialLinks: true,
-        preferences: {
-          include: {
-            music: true,
-            artist: true,
-          },
-        },
       },
     });
     return {
@@ -32,12 +26,6 @@ export class PrismaController {
       where: { idUsers: id },
       include: {
         socialLinks: true,
-        preferences: {
-          include: {
-            music: true,
-            artist: true,
-          },
-        },
       },
     });
 
