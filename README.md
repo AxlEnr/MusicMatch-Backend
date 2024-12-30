@@ -31,7 +31,7 @@ Esto iniciara la ejecucion del servidor en la vairable asignada a API_SERVICE
 ```
 npx prisma generate
 npx prisma migrate deploy
-npx prisma migrate dev --name spotifriends
+npx prisma migrate dev --name musicmatch
 ```
 
 ## Comandos disponibles

@@ -8,12 +8,8 @@ import { ProfileModule } from './profile/saveProfile.module'
 import { APP_PIPE } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SocialLinksModule } from './socialLinks/socialLinks.module';
-import { ArtistModule } from './artists/artists.module';
-import { MusicModule } from './music/music.module';
 import { PlaylistModule } from './playlist/playlist.module';
-import { AlbumModule } from './albums/album.module';
-import { MatchModule } from './matchUsers/match.module';
-import { PreferencesModule } from './preferences/preferences.module';
+
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),
@@ -21,12 +17,8 @@ import { PreferencesModule } from './preferences/preferences.module';
     PrismaModule, 
     ProfileModule, 
     SocialLinksModule, 
-    ArtistModule, 
-    MusicModule,
     PlaylistModule,
-    AlbumModule,
-    MatchModule,
-    PreferencesModule],
+],
   controllers: [AppController],
   providers: [AppService, {
     provide: APP_PIPE,
