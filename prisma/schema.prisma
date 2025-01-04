@@ -8,101 +8,103 @@ datasource db {
 }
 
 model User {
-  idUsers      String                @id @default(uuid()) @db.Char(36)
-  username     String                @db.VarChar(30)
-  email        String                @unique @db.VarChar(50)
-  profileImg   String?               @db.VarChar(255)
-  userPass     String                @db.VarChar(255)
-  userDesc     String?               @db.VarChar(255)
+  id           String             @id @default(uuid()) @db.Char(36)
+  username     String             @db.VarChar(30)
+  email        String             @unique @db.VarChar(50)
+  profileImg   String?            @db.VarChar(255)
+  userPass     String             @db.VarChar(255)
+  userDesc     String?            @db.VarChar(255)
   socialLinks  UserSocialLink[]
   preferencesMusic  MusicPreference[]
   preferencesArtist ArtistPreference[]
-  matches1     Match[]               @relation("user1Matches")
-  matches2     Match[]               @relation("user2Matches")
+  matches1     Match[]            @relation("user1Matches")
+  matches2     Match[]            @relation("user2Matches")
   recentAlbums UserAlbum[]
   playlists    UserPlaylist[]
 }
 
 model UserSocialLink {
-  idLink       String @id @default(uuid()) @db.Char(36)
+  id           String @id @default(uuid()) @db.Char(36)
   platformName String @db.VarChar(50)
   profileLink  String @db.VarChar(255)
-  userID       String
-  user         User   @relation(fields: [userID], references: [idUsers], onDelete: Cascade)
+  userId       String
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model MusicPreference {
-  idMusic      String                @id @default(uuid()) @db.Char(36)
-  songName     String                @db.VarChar(100)
+  id           String             @id @default(uuid()) @db.Char(36)
+  songName     String             @db.VarChar(100)
   artistId     String
-  artistN      ArtistPreference @relation(fields: [artistId], references: [idArtist]) 
-  userRef      User @relation(fields: [idUser], references: [idUsers], onDelete: Cascade)
-  idUser       String
-  MatchRef MatchDetail[]
+  artist       ArtistPreference   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  matchDetails MatchDetail[]
 }
 
 model ArtistPreference {
-  idArtist     String                @id @default(uuid()) @db.Char(36)
-  artistName   String                @db.VarChar(100)
-  idUser       String
-  userRef      User @relation(fields: [idUser], references: [idUsers], onDelete: Cascade)
-  musicR MusicPreference[]
-  albumR Album[]
-  MatchRef MatchDetail[]
+  id           String             @id @default(uuid()) @db.Char(36)
+  artistName   String             @db.VarChar(100)
+  userId       String
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  musicPrefs   MusicPreference[]
+  albums       Album[]
+  matchDetails MatchDetail[]
 }
 
 model Album {
-  idAlbum           String @id @default(uuid()) @db.Char(36)
-  name         String
-  artistId      String
-  artistN      ArtistPreference @relation(fields: [artistId], references: [idArtist]) 
-  userAlb      UserAlbum[]
+  id       String            @id @default(uuid()) @db.Char(36)
+  name     String            @db.VarChar(100)
+  artistId String
+  artist   ArtistPreference  @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  userAlbums UserAlbum[]
 }
+
 model UserAlbum {
-  id      String @id @default(uuid()) @db.Char(36)
-  userID  String
-  albumID String
-  user    User   @relation(fields: [userID], references: [idUsers], onDelete: Cascade)
-  album   Album  @relation(fields: [albumID], references: [idAlbum], onDelete: Cascade)
-  @@unique([userID, albumID])
+  id       String @id @default(uuid()) @db.Char(36)
+  userId   String
+  albumId  String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  album    Album  @relation(fields: [albumId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, albumId])
 }
 
 model Playlist {
-  idPlaylist    String         @id @default(uuid()) @db.Char(36)
-  name          String         @db.VarChar(100)
-  coverUrl      String?        @db.VarChar(255)
-  ownerID       String?
+  id        String         @id @default(uuid()) @db.Char(36)
+  name      String         @db.VarChar(100)
+  coverUrl  String?        @db.VarChar(255)
+  ownerId   String?
   userPlaylists UserPlaylist[]
 }
 
 model UserPlaylist {
   id         String   @id @default(uuid()) @db.Char(36)
-  userID     String
-  playlistID String
-  user       User     @relation(fields: [userID], references: [idUsers], onDelete: Cascade)
-  playlist   Playlist @relation(fields: [playlistID], references: [idPlaylist], onDelete: Cascade)
+  userId     String
+  playlistId String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
 
-  @@unique([userID, playlistID])
+  @@unique([userId, playlistId])
 }
 
 model Match {
-  idMatch   String        @id @default(uuid()) @db.Char(36)
-  user1ID   String
-  user2ID   String
+  id        String        @id @default(uuid()) @db.Char(36)
+  user1Id   String
+  user2Id   String
   matchDate DateTime      @default(now())
-  user1     User          @relation("user1Matches", fields: [user1ID], references: [idUsers], onDelete: Cascade)
-  user2     User          @relation("user2Matches", fields: [user2ID], references: [idUsers], onDelete: Cascade)
+  user1     User          @relation("user1Matches", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2     User          @relation("user2Matches", fields: [user2Id], references: [id], onDelete: Cascade)
   details   MatchDetail[]
 }
 
 model MatchDetail {
-  idDetail String  @id @default(uuid()) @db.Char(36)
-  idMatch  String
-  musicId  String?
-  artistId String?
-  match    Match   @relation(fields: [idMatch], references: [idMatch], onDelete: Cascade)
-  music    MusicPreference?  @relation(fields: [musicId], references: [idMusic], onDelete: Cascade)
-  artist   ArtistPreference? @relation(fields: [artistId], references: [idArtist], onDelete: Cascade)
+  id        String             @id @default(uuid()) @db.Char(36)
+  matchId   String
+  musicId   String?
+  artistId  String?
+  match     Match              @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  music     MusicPreference?   @relation(fields: [musicId], references: [id], onDelete: Cascade)
+  artist    ArtistPreference?  @relation(fields: [artistId], references: [id], onDelete: Cascade)
 
-  @@unique([idMatch, musicId, artistId])
+  @@unique([matchId, musicId, artistId])
 }

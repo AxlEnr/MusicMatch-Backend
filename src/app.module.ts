@@ -3,21 +3,20 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
-import { PrismaModule } from './prisma/prisma.module';
-import { ProfileModule } from './profile/saveProfile.module'
 import { APP_PIPE } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { SocialLinksModule } from './socialLinks/socialLinks.module';
-import { PlaylistModule } from './playlist/playlist.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { StepOneModule } from './createProfile/stepOne/StepOne.module';
+import { StepTwoModule } from './createProfile/stepTwo/stepTwo.module';
+
 
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),
-    AuthModule, 
-    PrismaModule, 
-    ProfileModule, 
-    SocialLinksModule, 
-    PlaylistModule,
+    AuthModule,
+    PrismaModule,
+    StepOneModule,
+    StepTwoModule
 ],
   controllers: [AppController],
   providers: [AppService, {
