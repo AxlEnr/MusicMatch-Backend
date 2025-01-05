@@ -8,6 +8,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { PrismaModule } from './prisma/prisma.module';
 import { StepOneModule } from './createProfile/stepOne/StepOne.module';
 import { StepTwoModule } from './createProfile/stepTwo/stepTwo.module';
+import { musicModule } from './createProfile/preferences/music/music.module';
 
 
 
@@ -16,7 +17,8 @@ import { StepTwoModule } from './createProfile/stepTwo/stepTwo.module';
     AuthModule,
     PrismaModule,
     StepOneModule,
-    StepTwoModule
+    StepTwoModule,
+    musicModule
 ],
   controllers: [AppController],
   providers: [AppService, {

@@ -14,9 +14,9 @@ async function bootstrap() {
     transform: true,
   }));
 
-  // Habilitar CORS
+  //Activar CORS
   app.enableCors({
-    origin: `${URL_FRONT}`,// URL del frontend
+    origin: `${URL_FRONT}`,
     methods: 'GET,POST,PUT,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Authorization',
   });
