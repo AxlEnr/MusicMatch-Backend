@@ -2,7 +2,7 @@ import { Controller, Post, Get, Body, Param } from "@nestjs/common";
 import { StepTwoService } from "./stepTwo.service";
 import { StepTwoDTO } from "./stepTwo.dto";
 
-@Controller('api/stepTwo')
+@Controller('api/steptwo')
 export class StepTwoController{
     constructor(private readonly stepTwoService: StepTwoService) {}
 
