@@ -9,6 +9,9 @@ import { PrismaModule } from './prisma/prisma.module';
 import { StepOneModule } from './createProfile/stepOne/StepOne.module';
 import { StepTwoModule } from './createProfile/stepTwo/stepTwo.module';
 import { musicModule } from './createProfile/preferences/music/music.module';
+import { ArtistModule } from './createProfile/preferences/artist/artist.module';
+import { AlbumModule } from './createProfile/preferences/album/album.module';
+import { PlaylistModule } from './createProfile/preferences/playlist/playlist.module';
 
 
 
@@ -18,7 +21,10 @@ import { musicModule } from './createProfile/preferences/music/music.module';
     PrismaModule,
     StepOneModule,
     StepTwoModule,
-    musicModule
+    musicModule,
+    ArtistModule,
+    AlbumModule,
+    PlaylistModule
 ],
   controllers: [AppController],
   providers: [AppService, {

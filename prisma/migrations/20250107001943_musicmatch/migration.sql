@@ -22,21 +22,39 @@ CREATE TABLE `UserSocialLink` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `MusicPreference` (
+CREATE TABLE `Music` (
     `id` CHAR(36) NOT NULL,
     `songName` VARCHAR(100) NOT NULL,
     `artistId` VARCHAR(191) NOT NULL,
-    `userId` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `ArtistPreference` (
+CREATE TABLE `Artist` (
     `id` CHAR(36) NOT NULL,
     `artistName` VARCHAR(100) NOT NULL,
-    `userId` VARCHAR(191) NOT NULL,
 
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `UserMusic` (
+    `id` CHAR(36) NOT NULL,
+    `userId` VARCHAR(191) NOT NULL,
+    `musicId` VARCHAR(191) NOT NULL,
+
+    UNIQUE INDEX `UserMusic_userId_musicId_key`(`userId`, `musicId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `UserArtist` (
+    `id` CHAR(36) NOT NULL,
+    `userId` VARCHAR(191) NOT NULL,
+    `artistId` VARCHAR(191) NOT NULL,
+
+    UNIQUE INDEX `UserArtist_userId_artistId_key`(`userId`, `artistId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -96,7 +114,6 @@ CREATE TABLE `MatchDetail` (
     `musicId` VARCHAR(191) NULL,
     `artistId` VARCHAR(191) NULL,
 
-    UNIQUE INDEX `MatchDetail_matchId_musicId_artistId_key`(`matchId`, `musicId`, `artistId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -104,16 +121,22 @@ CREATE TABLE `MatchDetail` (
 ALTER TABLE `UserSocialLink` ADD CONSTRAINT `UserSocialLink_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `MusicPreference` ADD CONSTRAINT `MusicPreference_artistId_fkey` FOREIGN KEY (`artistId`) REFERENCES `ArtistPreference`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Music` ADD CONSTRAINT `Music_artistId_fkey` FOREIGN KEY (`artistId`) REFERENCES `Artist`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `MusicPreference` ADD CONSTRAINT `MusicPreference_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `UserMusic` ADD CONSTRAINT `UserMusic_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `ArtistPreference` ADD CONSTRAINT `ArtistPreference_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `UserMusic` ADD CONSTRAINT `UserMusic_musicId_fkey` FOREIGN KEY (`musicId`) REFERENCES `Music`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Album` ADD CONSTRAINT `Album_artistId_fkey` FOREIGN KEY (`artistId`) REFERENCES `ArtistPreference`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `UserArtist` ADD CONSTRAINT `UserArtist_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `UserArtist` ADD CONSTRAINT `UserArtist_artistId_fkey` FOREIGN KEY (`artistId`) REFERENCES `Artist`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Album` ADD CONSTRAINT `Album_artistId_fkey` FOREIGN KEY (`artistId`) REFERENCES `Artist`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `UserAlbum` ADD CONSTRAINT `UserAlbum_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -137,7 +160,7 @@ ALTER TABLE `Match` ADD CONSTRAINT `Match_user2Id_fkey` FOREIGN KEY (`user2Id`) 
 ALTER TABLE `MatchDetail` ADD CONSTRAINT `MatchDetail_matchId_fkey` FOREIGN KEY (`matchId`) REFERENCES `Match`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `MatchDetail` ADD CONSTRAINT `MatchDetail_musicId_fkey` FOREIGN KEY (`musicId`) REFERENCES `MusicPreference`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `MatchDetail` ADD CONSTRAINT `MatchDetail_musicId_fkey` FOREIGN KEY (`musicId`) REFERENCES `UserMusic`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `MatchDetail` ADD CONSTRAINT `MatchDetail_artistId_fkey` FOREIGN KEY (`artistId`) REFERENCES `ArtistPreference`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `MatchDetail` ADD CONSTRAINT `MatchDetail_artistId_fkey` FOREIGN KEY (`artistId`) REFERENCES `UserArtist`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

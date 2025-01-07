@@ -5,15 +5,29 @@ import { PrismaClient } from "@prisma/client";
 export class musicService{
     private prisma = new PrismaClient();
 
-    async musicPreference(data: {
+
+    //FUNCIONES PARA LA TABLA MUSICA
+    async createMusic(data: {
         songName: string,
         artistId: string,
-        userId: string,
     }){
-        return this.prisma.musicPreference.create({ data });
+        return this.prisma.music.create({ data });
+    }
+
+    async getMusicByName(songName: string){
+        return this.prisma.music.findFirst({where: {songName}});
     }
 
     async getMusicById(id: string){
-        return this.prisma.musicPreference.findUnique({where: {id}})
+        return this.prisma.music.findUnique({where: {id}});
     }
+
+    //FUNCIONES PARA LA TABLA USERMUSIC
+    async userMusic(data: {
+        userId: string,
+        musicId: string
+    }){
+        return this.prisma.userMusic.create({ data });
+    }
+
 }

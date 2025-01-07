@@ -14,6 +14,6 @@ export class StepTwoService{
     }
 
     async getSocialLinksById(id: string){
-        return this.prisma.userSocialLink.findUnique({where: { id }})
+        return this.prisma.userSocialLink.findUnique({where: { id }});
     }
 }

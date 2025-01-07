@@ -1,12 +1,12 @@
 import { IsString } from "class-validator";
 
-export class musicDTO{
+export class matchDetailDTO{
     @IsString()
-    songName: string;
-    
+    matchId: string;
+
     @IsString()
     artistId: string;
 
     @IsString()
-    userId: string;
+    musicId: string;
 }
